@@ -1,0 +1,27 @@
+# Copyright 2026 Alex313031
+
+group("game_of_life") {
+  public_deps = [
+    ":gol_win32",
+  ]
+}
+
+executable("gol_win32") {
+  configs -= [ "//build/config/win:console_subsystem" ]
+  configs += [
+    "//build/config/win:windowed_subsystem",
+    ":gol_config",
+  ]
+  sources = [
+    "gol_win32.c",
+    "resource.rc",
+  ]
+}
+
+config("gol_config") {
+  include_dirs = [
+    "./",
+  ]
+  # Track unused functions
+  cflags = [ "-Wunused-function" ]
+}
