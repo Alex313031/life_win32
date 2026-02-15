@@ -15,4 +15,13 @@
 
 #include "resource.h"
 
+#define RGB_BLACK RGB(0, 0, 0)
+#define RGB_WHITE RGB(255, 255, 255)
+#define RGB_RED RGB(255, 0, 0)
+#define RGB_GREEN RGB(0, 255, 0)
+#define RGB_BLUE RGB(0, 0, 255)
+#define RGB_YELLOW RGB(255, 255, 0)
+
+static const LPCWSTR szWinClass = L"GOLWIN32";
+
 #endif // _GOL_WIN32_H_

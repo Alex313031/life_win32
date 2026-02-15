@@ -14,7 +14,7 @@ struct Point {
 
 bool board[WIDTH][HEIGHT];
 bool paused = true;
-bool grid = false;
+bool grid = true;
 int generation = 0;
 double speedMultiplier = 1.0;
 struct Point mousePoint;
@@ -22,6 +22,8 @@ struct Point mousePoint;
 HBRUSH colors[2];
 
 const UINT IDT_GENERATION = 0;
+
+static HICON icon;
 
 void NextGeneration()
 {
@@ -281,7 +283,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 
 		case WM_CLOSE: {
-			DestrowWindow(hwnd);
+			DestroyWindow(hwnd);
 			return 0;
 		}
 		case WM_DESTROY: {
@@ -293,13 +295,32 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return DefWindowProc(hwnd, message, wParam, lParam);
 }
 
+ATOM RegisterWndClass(HINSTANCE hInstance) {
+  WNDCLASSEXW wcex;
+  wcex.cbSize = sizeof(WNDCLASSEX);
+  wcex.style          = CS_HREDRAW | CS_VREDRAW;
+  wcex.lpfnWndProc    = WndProc;
+  wcex.cbClsExtra     = 0;
+  wcex.cbWndExtra     = 0;
+  wcex.hInstance      = hInstance;
+  wcex.hIcon          = icon;
+  wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
+  wcex.hbrBackground  = colors[0];
+  wcex.lpszMenuName   = nullptr; //MAKEINTRESOURCEW(IDC_GOL_WIN32);
+  wcex.lpszClassName  = szWinClass;
+  wcex.hIconSm        = icon;
+
+  return RegisterClassExW(&wcex);
+}
+
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR szCmdLine, int iCmdShow)
 {
-	LPCWSTR name = L"Game of life";
+	LPCWSTR title = L"Game of Life";
 
-	colors[0] = reinterpret_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
-	colors[1] = reinterpret_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
+	colors[0] = static_cast<HBRUSH>(CreateSolidBrush(RGB_BLUE));
+	colors[1] = static_cast<HBRUSH>(CreateSolidBrush(RGB_WHITE));
 
+  constexpr bool standardicon = true;
 	// Create icon
 	BYTE iconAnd[32] = { 0 };
 	BYTE iconXor[] = {
@@ -312,36 +333,24 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR szCmdLi
 		0x0F, 0xFF, 0xF0, 0x00,
 		0x00, 0x00, 0x00, 0x00
 	};
-	HICON icon = CreateIcon(hInstance, 32, 8, 1, 1, iconAnd, iconXor);
-
+	icon = standardicon ? LoadIcon(hInstance, MAKEINTRESOURCE(IDI_GOL_WIN32))
+                      : CreateIcon(hInstance, 32, 8, 1, 1, iconAnd, iconXor);
 	// Create window class
-	WNDCLASS wndclass = {
-		.style = CS_HREDRAW | CS_VREDRAW,
-		.lpfnWndProc = WndProc,
-		.cbClsExtra = 0,
-		.cbWndExtra = 0,
-		.hInstance = hInstance,
-		.hIcon = icon,
-		.hCursor = LoadCursor(NULL, IDC_ARROW),
-		.hbrBackground = colors[0],
-		.lpszMenuName = NULL,
-		.lpszClassName = name
-	};
-	RegisterClass(&wndclass);
+	RegisterWndClass(hInstance);
 
 	// Create window
-	HWND hwnd = CreateWindow(
-		name, name,
-		WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME ^ WS_MAXIMIZEBOX,
+	HWND hwnd = CreateWindowExW(
+		WS_EX_WINDOWEDGE, szWinClass, title,
+		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME,
 		CW_USEDEFAULT, CW_USEDEFAULT, 0, 0,
-		NULL, NULL, hInstance, NULL
+		nullptr, nullptr, hInstance, nullptr
 	);
 
 	ShowWindow(hwnd, iCmdShow);
 	UpdateWindow(hwnd);
 
 	MSG msg;
-	while (GetMessage(&msg, NULL, 0, 0)) {
+	while (GetMessage(&msg, nullptr, 0, 0)) {
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
