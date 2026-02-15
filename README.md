@@ -5,7 +5,9 @@ It runs on Windows 2000+. A classic historical game that can run on any Windows 
 
 Originally written in C by [ReimarPB](https://github.com/ReimarPB) in 2022.
 
-<img src="./assets/screenshot.png" title="Screenshot" width="80%">
+<p align="center">
+<img title="Screenshot running on Windows 2000" src="./assets/screenshot.png" width="80%">
+</p>
 
 ## Controls
 - **Left Click:** Create cell
