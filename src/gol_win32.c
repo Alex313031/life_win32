@@ -1,8 +1,4 @@
-#include <windows.h>
-#include <windowsx.h>
-#include <strsafe.h>
-#include <stdbool.h>
-#include <stdio.h>
+#include "gol_win32.h"
 
 #define MIN(a, b) (a < b ? a : b)
 #define MAX(a, b) (a > b ? a : b)
@@ -293,7 +289,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return DefWindowProc(hwnd, message, wParam, lParam);
 }
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow)
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine, int iCmdShow)
 {
 	LPCSTR name = TEXT("Game of life");
 

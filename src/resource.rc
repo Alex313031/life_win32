@@ -1,1 +1,122 @@
-0 ICON icon.ico
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+
+#ifndef APSTUDIO_INVOKED
+#include "version.h"
+#endif // APSTUDIO_INVOKED
+
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include <windows.h>
+#undef APSTUDIO_HIDDEN_SYMBOLS
+
+#include <winres.h>
+
+#ifdef __MINGW32__
+#include <winuser.h>
+#endif // __MINGW32__
+
+#undef APSTUDIO_READONLY_SYMBOLS
+
+#ifdef __MINGW32__
+APP_MANIFEST RT_MANIFEST "gol_win32.manifest"
+#endif // __MINGW32__
+
+IDI_GOL_WIN32    ICON    "icon.ico"
+
+#ifdef APSTUDIO_INVOKED
+1 TEXTINCLUDE
+BEGIN
+    "resource.h\0"
+END
+2 TEXTINCLUDE
+BEGIN
+    "#ifndef APSTUDIO_INVOKED\r\n"
+    "#include ""version.h""\r\n"
+    "#endif\r\n"
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""winres.h""\r\n"
+    "\0"
+END
+#endif // APSTUDIO_INVOKED
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_NEUTRAL
+
+IDC_GOL_WIN32 MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&Reset",   IDM_RESET
+        MENUITEM "E&xit",    IDM_EXIT
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Help",    IDM_HELP
+        MENUITEM             SEPARATOR
+        MENUITEM "&About",   IDM_ABOUT
+    END
+END
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 132, 56
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION ABOUT_TITLE
+FONT 8, "MS Shell Dlg"
+BEGIN
+    ICON            IDI_SMALL, IDC_STATIC, 8, 8, 32, 32
+    LTEXT           ABOUT_CONTENT, IDC_STATIC, 38, 10, 116, 8, SS_NOPREFIX
+    LTEXT           ABOUT_COPYRIGHT, IDC_STATIC, 38, 20, 116, 8
+    DEFPUSHBUTTON   "OK", IDOK, 50, 35, 40, 14, WS_GROUP
+END
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN,   21
+        RIGHTMARGIN,  132
+        TOPMARGIN,    12
+        BOTTOMMARGIN, 56
+    END
+END
+#endif
+
+#endif
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION MAJOR_VERSION, MINOR_VERSION, BUILD_VERSION
+ PRODUCTVERSION MAJOR_VERSION, MINOR_VERSION, BUILD_VERSION
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS VS_FF_DEBUG // 0x00000010L
+#else // Release mode
+ FILEFLAGS 0x00000000L // Release build
+#endif  // _DEBUG
+ FILEOS VOS_NT_WINDOWS32 // Win32 (Windows NT and later)
+ FILETYPE VFT_APP // 0x00000001L
+ FILESUBTYPE VFT2_UNKNOWN // 0x00000000L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0" // 0x0409 = US English, 0x04B0 = Unicode (1200)
+        BEGIN
+            VALUE "Comments", "https://github.com/Alex313031/life_win32"
+            VALUE "CompanyName", "Alex313031"
+            VALUE "FileDescription", "Win32 Game of Life"
+            VALUE "FileVersion", VERSION_STRING
+            VALUE "InternalName", "gameoflife"
+            VALUE "LegalCopyright", LEGAL_COPYRIGHT
+            VALUE "LegalTrademarks", "BSD-3"
+            VALUE "OriginalFilename", "gol_win32.exe"
+            VALUE "ProductName", "Game Of Life"
+            VALUE "ProductVersion", VERSION_STRING
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 1200
+    END
+END
