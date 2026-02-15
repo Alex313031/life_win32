@@ -13,14 +13,14 @@ executable("gol_win32") {
     ":gol_config",
   ]
   sources = [
-    "gol_win32.c",
-    "resource.rc",
+    "src/gol_win32.c",
+    "src/resource.rc",
   ]
 }
 
 config("gol_config") {
   include_dirs = [
-    "./",
+    "./src",
   ]
   # Track unused functions
   cflags = [ "-Wunused-function" ]
