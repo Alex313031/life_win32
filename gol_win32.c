@@ -1,5 +1,5 @@
-#include <Windows.h>
-#include <Windowsx.h>
+#include <windows.h>
+#include <windowsx.h>
 #include <strsafe.h>
 #include <stdbool.h>
 #include <stdio.h>
