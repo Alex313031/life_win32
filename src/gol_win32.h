@@ -8,9 +8,10 @@
 #include <commctrl.h>
 #include <tchar.h>
 
-#include <strsafe.h>
-#include <stdbool.h>
+#include <cwchar>
 #include <stdio.h>
+#include <strsafe.h>
+#include <string>
 
 #include "resource.h"
 

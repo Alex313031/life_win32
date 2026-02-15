@@ -42,7 +42,7 @@ void NextGeneration()
 			};
 			
 			int neighborCount = 0;
-			for (int i = 0; i < sizeof(neighbors) / sizeof(neighbors[0]); i++) {
+			for (int i = 0; i < static_cast<int>(sizeof(neighbors) / sizeof(neighbors[0])); i++) {
 				if (
 					neighbors[i].x >= 0 && neighbors[i].x < WIDTH &&
 					neighbors[i].y >= 0 && neighbors[i].y < HEIGHT &&
@@ -139,7 +139,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			// Create memory DC for double buffering
 			HDC hdcMem = CreateCompatibleDC(hdc);
 			HBITMAP hbmMem = CreateCompatibleBitmap(hdc, clientRect.right - clientRect.left, clientRect.bottom - clientRect.top);
-			HDC hbmOld = SelectObject(hdcMem, hbmMem);
+			HDC hbmOld = reinterpret_cast<HDC>(SelectObject(hdcMem, hbmMem));
 
 			struct Point updateStart = ScreenToGamePoint(updateRect.left, updateRect.top);
 			struct Point updateEnd   = ScreenToGamePoint(updateRect.right, updateRect.bottom);
@@ -177,19 +177,19 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 				SetTextColor(hdcMem, RGB(255, 255, 255));
 				SetBkColor(hdcMem, RGB(0, 0, 0));
 
-				char statusLeft[64];
-				StringCbPrintf(statusLeft, sizeof(statusLeft), TEXT("Generation %d   (Speed x%g)"), generation, speedMultiplier);
-				TextOut(hdcMem, 0, HEIGHT * CELL_SIZE, statusLeft, strlen(statusLeft));
+				wchar_t statusLeft[64];
+				StringCbPrintf(statusLeft, sizeof(statusLeft), L"Generation %d   (Speed x%g)", generation, speedMultiplier);
+				TextOut(hdcMem, 0, HEIGHT * CELL_SIZE, statusLeft, wcslen(statusLeft));
 				
-				char statusRight[64];
-				StringCbPrintf(statusRight, sizeof(statusRight), TEXT("%d, %d"), mousePoint.x, mousePoint.y);
+				wchar_t statusRight[64];
+				StringCbPrintf(statusRight, sizeof(statusRight), L"%d, %d", mousePoint.x, mousePoint.y);
 				SetTextAlign(hdcMem, TA_RIGHT);
-				TextOut(hdcMem, WIDTH * CELL_SIZE, HEIGHT * CELL_SIZE, statusRight, strlen(statusRight));
+				TextOut(hdcMem, WIDTH * CELL_SIZE, HEIGHT * CELL_SIZE, statusRight, wcslen(statusRight));
 
 				if (paused) {
 					SetTextAlign(hdcMem, TA_CENTER);
-					PCSTR pausedText = TEXT("Paused");
-					TextOut(hdcMem, (WIDTH * CELL_SIZE) / 2, HEIGHT * CELL_SIZE, pausedText, strlen(pausedText));
+					LPCWSTR pausedText = L"Paused";
+					TextOut(hdcMem, (WIDTH * CELL_SIZE) / 2, HEIGHT * CELL_SIZE, pausedText, wcslen(pausedText));
 				}
 			}
 
@@ -262,7 +262,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 					break;
 
 				case 'R':
-					if (MessageBox(hwnd, TEXT("Are you sure you want to reset everything?"), TEXT("Reset"), MB_YESNO | MB_ICONWARNING) == IDYES) {
+					if (MessageBox(hwnd, L"Are you sure you want to reset the game?", L"Reset", MB_YESNO | MB_ICONWARNING) == IDYES) {
 						generation = 0;
 						memset(board, 0, sizeof(board));
 						paused = true;
@@ -280,6 +280,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			return 0;
 		}
 
+		case WM_CLOSE: {
+			DestrowWindow(hwnd);
+			return 0;
+		}
 		case WM_DESTROY: {
 			PostQuitMessage(0);
 			return 0;
@@ -289,12 +293,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return DefWindowProc(hwnd, message, wParam, lParam);
 }
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine, int iCmdShow)
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR szCmdLine, int iCmdShow)
 {
-	LPCSTR name = TEXT("Game of life");
+	LPCWSTR name = L"Game of life";
 
-	colors[0] = GetStockObject(BLACK_BRUSH);
-	colors[1] = GetStockObject(WHITE_BRUSH);
+	colors[0] = reinterpret_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
+	colors[1] = reinterpret_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
 
 	// Create icon
 	BYTE iconAnd[32] = { 0 };
@@ -341,5 +345,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
+  return static_cast<int>(msg.wParam);
 }
 

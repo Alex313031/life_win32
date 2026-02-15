@@ -13,7 +13,7 @@ executable("gol_win32") {
     ":gol_config",
   ]
   sources = [
-    "src/gol_win32.c",
+    "src/gol_win32.cc",
     "src/resource.rc",
   ]
 }
