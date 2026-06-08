@@ -2,14 +2,18 @@
 
 group("game_of_life") {
   public_deps = [
+    ":gol",
+  ]
+}
+
+group("gol") {
+  public_deps = [
     ":gol_win32",
   ]
 }
 
 executable("gol_win32") {
-  configs -= [ "//build/config/win:console_subsystem" ]
   configs += [
-    "//build/config/win:windowed_subsystem",
     ":gol_config",
   ]
   sources = [
@@ -24,4 +28,13 @@ config("gol_config") {
   ]
   # Track unused functions
   cflags = [ "-Wunused-function" ]
+  libs = [
+    "kernel32",
+    "user32",
+    "shell32",
+    "comctl32",
+    "comdlg32",
+    "gdi32",
+    "winmm",
+  ]
 }
