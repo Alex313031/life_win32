@@ -3,6 +3,7 @@
 
 // Icons
 #define IDI_GOL_WIN32               101
+#define IDI_SMALL                   102
 
 // Menu
 #define IDC_GOL_WIN32               104

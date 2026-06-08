@@ -27,27 +27,31 @@
  #include <SDKDDKVer.h> // Doesn't exist in MinGW
 #endif // __MINGW32__
 
-// Macro to convert to string
-#if !defined(_STRINGIZER_)
- #define _STRINGIZER_
- #define _STRINGIZER(in) #in
- #define STRINGIZE(in) _STRINGIZER(in)
-#endif // !defined(_STRINGIZER_)
-
-// Main version constant
-#ifndef _VERSION
- // Run stringizer above
- #define _VERSION(major,minor,build) STRINGIZE(major) "." STRINGIZE(minor) "." STRINGIZE(build)
-#endif // _VERSION
-
 // Adhere to semver
 #define MAJOR_VERSION 0
 #define MINOR_VERSION 0
 #define BUILD_VERSION 2
 
+// Macro to convert to string
+#if !defined(_STRINGIZER_)
+ #define _STRINGIZER_
+ #define _STRINGIZER(in) #in
+ #define STRINGIZE(in) _STRINGIZER(in)
+ // Wide-string variant: L ## "x" -> L"x". Two levels so the argument expands
+ // before the L## paste widens the resulting narrow literal.
+ #define _WIDEN(in) L ## in
+ #define WIDEN(in) _WIDEN(in)
+#endif // !defined(_STRINGIZER_)
+
+// Main version constant
+#ifndef _VERSION
+ // Run stringizer above
+ #define _VERSION(major,minor,build) WIDEN(STRINGIZE(major.minor.build))
+#endif // _VERSION
+
 #define VERSION_STRING _VERSION(MAJOR_VERSION, MINOR_VERSION, BUILD_VERSION)
 #define ABOUT_TITLE L"About Game of Life"
-#define ABOUT_CONTENT L"gol_win32 ver. " VERSION_STRING
+#define ABOUT_CONTENT WIDEN(STRINGIZE(gol_win32 ver. MAJOR_VERSION.MINOR_VERSION.BUILD_VERSION))
 #define ABOUT_COPYRIGHT L"\251 2026 Alex313031" // \251 is the © symbol
 #define LEGAL_COPYRIGHT L"\251 2026 Alex313031"
 

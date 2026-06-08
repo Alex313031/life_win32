@@ -23,6 +23,7 @@ APP_MANIFEST RT_MANIFEST "gol_win32.manifest"
 #endif // __MINGW32__
 
 IDI_GOL_WIN32    ICON    "icon.ico"
+IDI_SMALL        ICON    "icon.ico"
 
 #ifdef APSTUDIO_INVOKED
 1 TEXTINCLUDE
